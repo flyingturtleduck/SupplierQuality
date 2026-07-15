@@ -1,0 +1,17 @@
+//  Date        Sign      History
+//  ----------  --------  -----------------------------------------------------------
+//  
+
+projection SupplierHandling;
+component ENTERP;
+layer Cust;
+description "This page is to register a new supplier";
+
+
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+
+@Override
+entity SupplierInfoGeneral {
+   @DynamicComponentDependency PURCH
+   array CPurchComplianceArray(SupplierId) to CPurchCompliance(VendorNo);
+}

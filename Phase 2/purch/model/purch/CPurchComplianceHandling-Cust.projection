@@ -1,0 +1,60 @@
+projection CPurchComplianceHandling;
+component PURCH;
+layer Cust;
+description "Put some useful description here ...";
+category Users;
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+entityset CPurchComplianceSet for CPurchCompliance;
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CPurchCompliance {
+   keys = VendorNo;
+   crud = Create, Read, Update, Delete;
+   --use attributes = QualityType, EnvironmentType, CodeOfConductType, CageCode, CpaoApproved, CpaoSchAudDate, CmmcTargetLevel, FormOfBusiness, SprsScore, CountryCode;
+   attribute QualityType Text;
+   attribute EnvironmentType Text;
+   attribute CodeOfConductType Text;
+   attribute CageCode Number;
+   attribute CpaoApproved Boolean("TRUE", "FALSE") {
+      default = "FALSE";
+   }
+   attribute CpaoSchAudDate Date;
+   attribute CmmcTargetLevel Enumeration(CCmmcTargetLevelEnum);
+   attribute FormOfBusiness Text;
+   attribute SprsScore Number;
+   attribute CountryCode Text;
+
+   reference    QualityTypeRef(QualityType) to       CQualityType(QualityTypeId);
+   reference    EnvironmentTypeRef(EnvironmentType) to   CEnvironmentType(EnvironmentTypeId);
+   reference    CodeOfConductTypeRef(CodeOfConductType) to CCodeOfConductType(CodeOfConductTypeId);
+   reference    FormOfBusinessRef(CountryCode, FormOfBusiness) to    CorporateForm(CountryCode, CorporateForm);
+}
+
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

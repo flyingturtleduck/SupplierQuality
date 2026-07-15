@@ -1,0 +1,99 @@
+//  Date        Sign      History
+//  ----------  --------  -----------------------------------------------------------
+//  
+
+fragment SupplierPurchaseInformationPage;
+component PURCH;
+layer Cust;
+description "Purchase Information for Supplier";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+
+----------------------------- CLIENT FRAGMENTS ------------------------------
+group CPurchComplianceGroup for CPurchCompliance {
+   label = "Compliance";
+   lov QualityTypeRef with ReferenceCQualityTypeSelector {
+      size = Medium;
+      description = QualityTypeRef.Description;
+   }
+   lov EnvironmentTypeRef with ReferenceCEnvironmentTypeSelector {
+      size = Medium;
+      description = EnvironmentTypeRef.Description;
+   }
+   lov CodeOfConductTypeRef with ReferenceCCodeOfConductTypeSelector {
+      size = Medium;
+      description = CodeOfConductTypeRef.Description;
+   }
+   field CageCode {
+      size = Medium;
+   }
+   field CpaoApproved {
+      size = Medium;
+   }
+   field CpaoSchAudDate {
+      size = Medium;
+   }
+   field CmmcTargetLevel {
+      size = Small;
+   }
+   lov FormOfBusinessRef with ReferenceCorporateFormSelector {
+      size = Medium;
+      description = FormOfBusinessRef.CorporateFormDesc;
+   }
+   field SprsScore {
+      size = Medium;
+      validate command {
+         execute {
+            if [SprsScore > 110] {
+               error("SPRS Score cannot exceed 110.");
+               set SprsScore = null;
+               exit CANCEL;
+            }
+         }
+      }
+   }
+
+}
+
+singleton CPurchComplianceSingleton for CPurchCompliance {
+   crudactions {
+   }
+}
+
+
+@Override
+page Purchase using SupplierInfoGeneralSet {
+   tabs {
+      tab {
+         label = "Compliance";
+         visible = [not OneTime];
+         singleton CPurchComplianceSingleton(CPurchComplianceArray) bind SupplierGeneralSelector;
+         group CPurchComplianceGroup bind CPurchComplianceSingleton;
+      }
+
+   }
+}
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+@Override
+entity CPurchCompliance {
+   keys = VendorNo;
+   crud = Create, Read, Update, Delete;
+   attribute QualityType Text;
+   attribute EnvironmentType Text;
+   attribute CodeOfConductType Text;
+   attribute CageCode Number;
+   attribute CpaoApproved Boolean("TRUE", "FALSE") {
+      default = "FALSE";
+   }
+   attribute CpaoSchAudDate Date;
+   attribute CmmcTargetLevel Enumeration(CCmmcTargetLevelEnum);
+   attribute FormOfBusiness Text;
+   attribute SprsScore Number;
+   attribute CountryCode Text;
+
+   reference    QualityTypeRef(QualityType) to       CQualityType(QualityTypeId);
+   reference    EnvironmentTypeRef(EnvironmentType) to   CEnvironmentType(EnvironmentTypeId);
+   reference    CodeOfConductTypeRef(CodeOfConductType) to CCodeOfConductType(CodeOfConductTypeId);
+   reference    FormOfBusinessRef(CountryCode, FormOfBusiness) to    CorporateForm(CountryCode, CorporateForm);
+}

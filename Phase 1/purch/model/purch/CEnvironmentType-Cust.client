@@ -1,0 +1,107 @@
+client CEnvironmentType;
+component PURCH;
+layer Cust;
+projection CEnvironmentTypeHandling;
+
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+/*navigator {
+   entry CEnvironmentTypeEntry parent PurchNavigator.ProcurementBasicData at index 1006 {
+      label = "Environment Type";
+      page CEnvironmentTypePage;
+   }
+}*/
+-------------------------------- MAIN PAGES ---------------------------------
+page CEnvironmentTypePage using CEnvironmentTypeSet {
+   label = "Environment Type";
+   list CEnvironmentTypeList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+command CBulkSetActive for CEnvironmentType {
+   label = "Set Active";
+   enabled = [Objstate != "Active"];
+   mode = SelectedRecords;
+   bulkexecute {
+      bulkcall CBulkSetActive();
+   }
+}
+command CBulkSetHidden for CEnvironmentType {
+   label = "Hide";
+   enabled = [Objstate != "Hidden"];
+   mode = SelectedRecords;
+   bulkexecute {
+      bulkcall CBulkSetHidden();
+   }
+}
+command CBulkSetBlocked for CEnvironmentType {
+   label = "Block";
+   enabled = [Objstate != "Blocked"];
+   mode = SelectedRecords;
+   bulkexecute {
+      bulkcall CBulkSetBlocked();
+   }
+}
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+list CEnvironmentTypeList for CEnvironmentType {
+   field EnvironmentTypeId;
+   field Description;
+
+   badge Objstate {
+      label = "Validity";
+      style = TextOnly;
+      size = Small;
+      emphasis ValidityActive = [Objstate = "Active"];
+      emphasis ValidityHidden = [Objstate = "Hidden"];
+      emphasis ValidityBlocked = [Objstate = "Blocked"];
+   }
+
+   commandgroup DataValidityCmdGroup {
+      label = "Validity";
+      command CBulkSetActive {
+         label = "Set Active";
+      }
+      command CBulkSetHidden {
+         label = "Hide";
+      }
+      command CBulkSetBlocked {
+         label = "Block";
+      }
+   }
+}
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

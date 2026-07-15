@@ -1,0 +1,128 @@
+client CPurchCompliance;
+component PURCH;
+layer Cust;
+projection CPurchComplianceHandling;
+
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+
+-------------------------------- MAIN PAGES ---------------------------------
+/*
+page PurchCompliance using CPurchComplianceSet {
+   label = "Vendor Compliance";
+   crudactions {
+      new {
+         enabled = [true];
+      }
+      edit {
+         enabled = [true];
+      }
+      delete {
+         enabled = [true];
+      }
+
+   }
+
+   selector CPurchComplianceSelector;
+   group CPurchComplianceGroup bind CPurchComplianceSelector;
+
+}
+*/
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+@Override
+selector CPurchComplianceSelector for CPurchCompliance {
+   label = "${VendorNo}";
+   static VendorNo;
+}
+
+
+---------------------------------- GROUPS -----------------------------------
+group CPurchComplianceGroup for CPurchCompliance {
+   label = "Compliance";
+   lov QualityTypeRef with ReferenceCQualityTypeSelector {
+      size = Medium;
+      description = QualityTypeRef.Description;
+   }
+   lov EnvironmentTypeRef with ReferenceCEnvironmentTypeSelector {
+      size = Medium;
+      description = EnvironmentTypeRef.Description;
+   }
+   lov CodeOfConductTypeRef with ReferenceCCodeOfConductTypeSelector {
+      size = Medium;
+      description = CodeOfConductTypeRef.Description;
+   }
+   field CageCode {
+      size = Medium;
+   }
+   field CpaoApproved {
+      size = Medium;
+   }
+   field CpaoSchAudDate {
+      size = Medium;
+   }
+   field CmmcTargetLevel {
+      size = Small;
+      /*validate command {
+         execute {
+            if [CmmcTargetLevel != null and CmmcTargetLevel != "1" and CmmcTargetLevel != "2" and CmmcTargetLevel != "3"] {
+               error("CMMC Target Level must be 1, 2, or 3.");
+               exit CANCEL;
+            }
+         }
+      }*/
+   }
+   lov FormOfBusinessRef with ReferenceCorporateFormSelector {
+      size = Medium;
+      description = FormOfBusinessRef.CorporateFormDesc;
+   }
+   field SprsScore {
+      size = Medium;
+      validate command {
+         execute {
+            if [SprsScore > 110] {
+               error("SPRS Score cannot exceed 110.");
+               set SprsScore = null;
+               exit CANCEL;
+            }
+         }
+      }
+   }
+
+}
+
+
+----------------------------------- LISTS -----------------------------------
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------
